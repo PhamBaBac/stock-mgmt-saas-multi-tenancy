@@ -1,14 +1,13 @@
 package com.bacpham.saas.repositories;
 
-
-import com.bacpham.saas.entities.Category;
+import com.bacpham.saas.entities.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category, String> {
+public interface ProductRepository extends JpaRepository<Product, String> {
 
-    Optional<Category> findByNameIgnoreCase(String name);
+    Optional<Product> findByReferenceIgnoreCase(String reference);
 }
