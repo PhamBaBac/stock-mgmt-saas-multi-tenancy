@@ -2,11 +2,13 @@ package com.bacpham.saas.services.impl;
 
 import com.bacpham.saas.common.PageResponse;
 import com.bacpham.saas.entities.Category;
+import com.bacpham.saas.exceptions.DuplicateResourceException;
 import com.bacpham.saas.mappers.CategoryMapper;
 import com.bacpham.saas.repositories.CategoryRepository;
 import com.bacpham.saas.requests.CategoryRequest;
 import com.bacpham.saas.responses.CategoryResponse;
 import com.bacpham.saas.services.CategoryService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -36,7 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
         final Optional<Category> existingCategory = this.categoryRepository.findById(id);
         if (existingCategory.isEmpty()) {
             log.debug("Category does not exist");
-            throw new IllegalArgumentException("Category does not exist");
+            throw new EntityNotFoundException("Category does not exist");
         }
 
         if (!existingCategory.get().getName().equalsIgnoreCase(request.getName())) {
@@ -60,13 +62,13 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponse findById(String id) {
         return this.categoryRepository.findById(id)
                 .map(this.categoryMapper::toResponse)
-                .orElseThrow(() -> new IllegalArgumentException("Category does not exist"));
+                .orElseThrow(() -> new EntityNotFoundException("Category does not exist"));
     }
 
     @Override
     public void delete(String id) {
         final Category category = this.categoryRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Category does not exist"));
+                .orElseThrow(() -> new EntityNotFoundException("Category does not exist"));
         this.categoryRepository.delete(category);
     }
 
@@ -74,7 +76,7 @@ public class CategoryServiceImpl implements CategoryService {
         final Optional<Category> category = this.categoryRepository.findByNameIgnoreCase(categoryName);
         if (category.isPresent()) {
             log.debug("Category already exists");
-            throw new IllegalArgumentException("Category already exists");
+            throw new DuplicateResourceException("Category already exists");
         }
     }
 }

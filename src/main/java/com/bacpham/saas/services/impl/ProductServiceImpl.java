@@ -3,6 +3,7 @@ package com.bacpham.saas.services.impl;
 import com.bacpham.saas.common.PageResponse;
 import com.bacpham.saas.entities.Category;
 import com.bacpham.saas.entities.Product;
+import com.bacpham.saas.exceptions.DuplicateResourceException;
 import com.bacpham.saas.mappers.ProductMapper;
 import com.bacpham.saas.repositories.CategoryRepository;
 import com.bacpham.saas.repositories.ProductRepository;
@@ -43,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
         final Optional<Product> productExists = this.productRepository.findById(id);
         if (productExists.isEmpty()) {
             log.debug("Product does not exist");
-            throw new IllegalStateException("Product does not exist");
+            throw new EntityNotFoundException("Product does not exist");
         }
 
         // check if product already exists
@@ -85,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
         final Optional<Product> product = this.productRepository.findByReferenceIgnoreCase(reference);
         if (product.isPresent()) {
             log.debug("Product already exists");
-            throw new IllegalStateException("Product already exists");
+            throw new DuplicateResourceException("Product already exists");
         }
     }
 
@@ -93,7 +94,7 @@ public class ProductServiceImpl implements ProductService {
         final Optional<Category> category = this.categoryRepository.findById(categoryId);
         if (category.isEmpty()) {
             log.debug("Category does not exist");
-            throw new IllegalStateException("Category does not exist");
+            throw new EntityNotFoundException("Category does not exist");
         }
     }
 }
