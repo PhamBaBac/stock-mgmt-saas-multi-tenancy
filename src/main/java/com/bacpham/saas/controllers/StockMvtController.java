@@ -1,9 +1,9 @@
 package com.bacpham.saas.controllers;
 
 import com.bacpham.saas.common.PageResponse;
-import com.bacpham.saas.requests.ProductRequest;
-import com.bacpham.saas.responses.ProductResponse;
-import com.bacpham.saas.services.ProductService;
+import com.bacpham.saas.requests.StockMvtRequest;
+import com.bacpham.saas.responses.StockMvtResponse;
+import com.bacpham.saas.services.StockMvtService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -21,43 +21,43 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/products")
+@RequestMapping("/api/v1/stocks")
 @RequiredArgsConstructor
-@Tag(name = "Product", description = "Product API")
-public class ProductController {
+@Tag(name = "Stock Mvt", description = "Stock Mvt API")
+public class StockMvtController {
 
-    private final ProductService service;
+    private final StockMvtService service;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('COMPANY_ADMIN', 'ADMINISTRATOR')")
-    public ResponseEntity<Void> createProduct(
+    @PreAuthorize("hasAnyRole('COMPANY_ADMIN', 'ADMINISTRATOR', 'SALES_OPERATOR')")
+    public ResponseEntity<Void> createStockMvt(
             @RequestBody
             @Valid
-            final ProductRequest request
+            final StockMvtRequest request
     ) {
         this.service.create(request);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{product-id}")
+    @PutMapping("/{stock-mvt-id}")
     @PreAuthorize("hasAnyRole('COMPANY_ADMIN', 'ADMINISTRATOR')")
-    public ResponseEntity<Void> updateProduct(
+    public ResponseEntity<Void> updateStockMvt(
             @RequestBody
             @Valid
-            final ProductRequest request,
-            @PathVariable("product-id")
-            @NotNull(message = "Product ID cannot be null")
+            final StockMvtRequest request,
+            @PathVariable("stock-mvt-id")
+            @NotNull(message = "Stock Mvt ID cannot be null")
             final String id
     ) {
         this.service.update(id, request);
         return ResponseEntity.accepted().build();
     }
 
-    @GetMapping("/{product-id}")
+    @GetMapping("/{stock-mvt-id}")
     @PreAuthorize("hasAnyRole('COMPANY_ADMIN', 'ADMINISTRATOR', 'USER', 'SALES_OPERATOR')")
-    public ResponseEntity<ProductResponse> findProductById(
-            @PathVariable("product-id")
-            @NotNull(message = "Product ID cannot be null")
+    public ResponseEntity<StockMvtResponse> findStockMvtById(
+            @PathVariable("stock-mvt-id")
+            @NotNull(message = "Stock Mvt ID cannot be null")
             final String id
     ) {
         return ResponseEntity.ok(this.service.findById(id));
@@ -65,20 +65,34 @@ public class ProductController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('COMPANY_ADMIN', 'ADMINISTRATOR', 'USER', 'SALES_OPERATOR')")
-    public ResponseEntity<PageResponse<ProductResponse>> findAllProducts(
+    public ResponseEntity<PageResponse<StockMvtResponse>> findAllStockMvts(
             @RequestParam(name = "page", defaultValue = "0")
             final int page,
             @RequestParam(name = "size", defaultValue = "10")
             final int size
-    )  {
+    ) {
         return ResponseEntity.ok(this.service.findAll(page, size));
     }
 
-    @DeleteMapping("/{product-id}")
-    @PreAuthorize("hasRole('COMPANY_ADMIN')")
-    public ResponseEntity<Void> deleteProduct(
+    @GetMapping("/product/{product-id}")
+    @PreAuthorize("hasAnyRole('COMPANY_ADMIN', 'ADMINISTRATOR', 'USER', 'SALES_OPERATOR')")
+    public ResponseEntity<PageResponse<StockMvtResponse>> findAllStockMvtsByProductId(
             @PathVariable("product-id")
             @NotNull(message = "Product ID cannot be null")
+            final String productId,
+            @RequestParam(name = "page", defaultValue = "0")
+            final int page,
+            @RequestParam(name = "size", defaultValue = "10")
+            final int size
+    ) {
+        return ResponseEntity.ok(this.service.findAllByProductId(productId, page, size));
+    }
+
+    @DeleteMapping("/{stock-mvt-id}")
+    @PreAuthorize("hasRole('COMPANY_ADMIN')")
+    public ResponseEntity<Void> deleteStockMvt(
+            @PathVariable("stock-mvt-id")
+            @NotNull(message = "Stock Mvt ID cannot be null")
             final String id
     ) {
         this.service.delete(id);

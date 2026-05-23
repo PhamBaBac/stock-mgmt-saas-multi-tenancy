@@ -18,6 +18,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -30,6 +33,8 @@ import static jakarta.persistence.EnumType.STRING;
 @SuperBuilder
 @Entity
 @Table(name = "users")
+@SQLDelete(sql = "UPDATE users SET deleted = true WHERE id=?")
+@SQLRestriction("deleted = false")
 public class User extends AbstractEntity implements UserDetails {
 
     @ManyToOne(fetch = FetchType.LAZY)

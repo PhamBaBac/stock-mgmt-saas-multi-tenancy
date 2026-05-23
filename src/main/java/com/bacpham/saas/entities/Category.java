@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
+
 import java.util.List;
 
 @Getter
@@ -20,6 +23,8 @@ import java.util.List;
 @SuperBuilder
 @Entity
 @Table(name = "categories")
+@SQLDelete(sql = "UPDATE categories SET deleted = true WHERE id=?")
+@SQLRestriction("deleted = false")
 public class Category extends AbstractEntity {
 
     @Column(name = "name", nullable = false, unique = true)

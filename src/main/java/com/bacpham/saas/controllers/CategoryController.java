@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,7 @@ public class CategoryController {
     private final CategoryService service;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('COMPANY_ADMIN', 'ADMINISTRATOR')")
     public ResponseEntity<Void> createCategory(
             @RequestBody
             @Valid
@@ -40,6 +42,7 @@ public class CategoryController {
 
 
     @PutMapping("/{category-id}")
+    @PreAuthorize("hasAnyRole('COMPANY_ADMIN', 'ADMINISTRATOR')")
     public ResponseEntity<Void> updateCategory(
             @RequestBody
             @Valid
@@ -53,6 +56,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{category-id}")
+    @PreAuthorize("hasAnyRole('COMPANY_ADMIN', 'ADMINISTRATOR', 'USER', 'SALES_OPERATOR')")
     public ResponseEntity<CategoryResponse> findCategoryById(
             @PathVariable("category-id")
             @NotNull(message = "Category ID cannot be null")
@@ -62,6 +66,7 @@ public class CategoryController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('COMPANY_ADMIN', 'ADMINISTRATOR', 'USER', 'SALES_OPERATOR')")
     public ResponseEntity<PageResponse<CategoryResponse>> findAllCategories(
             @RequestParam(name = "page", defaultValue = "0")
             final int page,
@@ -72,6 +77,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{category-id}")
+    @PreAuthorize("hasRole('COMPANY_ADMIN')")
     public ResponseEntity<Void> deleteCategory(
             @PathVariable("category-id")
             @NotNull(message = "Category ID cannot be null")

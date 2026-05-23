@@ -1,12 +1,14 @@
 services:
   postgres:
-    image: postgres:17.5
+    image: postgres:17.5 
     container_name: saas-db
     environment:
       POSTGRES_DB: ${DB_NAME:-saas-app-db}
       POSTGRES_USER: ${DB_USER:-postgres}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
       PGDATA: /var/lib/postgresql/data/data
+      TZ: Asia/Ho_Chi_Minh
+      PGTZ: Asia/Ho_Chi_Minh
     ports:
       - "${DB_PORT:-5432}:5432"
     volumes:
@@ -14,7 +16,6 @@ services:
     networks:
       - saas-app-network
     restart: unless-stopped
-
 
 volumes:
   postgres_data:

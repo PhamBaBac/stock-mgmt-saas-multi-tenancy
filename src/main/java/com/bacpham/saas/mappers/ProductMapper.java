@@ -35,7 +35,7 @@ public class ProductMapper {
                         .getId())
                 .categoryName(product.getCategory()
                         .getName())
-                // .availableQuantity() to be later implemented
+                .availableQuantity(product.getAvailableQuantity())
                 .build();
     }
 }

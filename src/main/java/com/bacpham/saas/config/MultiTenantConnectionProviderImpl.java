@@ -1,4 +1,4 @@
-package com.bacpham.saas.security;
+package com.bacpham.saas.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,8 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class MultiTenantConnectionProviderImpl implements MultiTenantConnectionProvider<String>, HibernatePropertiesCustomizer {
+public class MultiTenantConnectionProviderImpl
+        implements MultiTenantConnectionProvider<String>, HibernatePropertiesCustomizer {
 
     private final DataSource dataSource;
 
@@ -34,7 +35,7 @@ public class MultiTenantConnectionProviderImpl implements MultiTenantConnectionP
         log.debug("Getting connection for tenant: {}", tenantIdentifier);
         final Connection connection = getAnyConnection();
         try {
-            if (tenantIdentifier != null && !tenantIdentifier.equals("public") ) {
+            if (tenantIdentifier != null && !tenantIdentifier.equals("public")) {
                 connection.createStatement().execute("SET search_path TO " + tenantIdentifier + ", public");
                 log.trace("Set search_path to: {}", tenantIdentifier);
             }

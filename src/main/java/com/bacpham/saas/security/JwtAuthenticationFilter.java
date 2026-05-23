@@ -69,9 +69,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.error("Error authenticating user", e);
         }
 
-        filterChain.doFilter(request, response);
-
-        TenantContext.clear();
+        try {
+            filterChain.doFilter(request, response);
+        } finally {
+            TenantContext.clear();
+        }
     }
 
     private String getJwtFromRequest(final HttpServletRequest request) {

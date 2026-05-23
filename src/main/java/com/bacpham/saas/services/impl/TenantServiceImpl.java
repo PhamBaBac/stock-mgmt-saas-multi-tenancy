@@ -76,8 +76,8 @@ public class TenantServiceImpl implements TenantService {
         final Tenant tenant = this.tenantRepository.findById(tenantId)
                 .orElseThrow(() -> new EntityNotFoundException("Tenant does not exist"));
 
-        if (tenant.getStatus() != TenantStatus.PENDING) {
-            throw new InvalidRequestException("Tenant is not pending");
+        if (tenant.getStatus() == TenantStatus.PENDING) {
+            throw new InvalidRequestException("Tenant must be approved first");
         }
 
         tenant.setStatus(TenantStatus.ACTIVE);
@@ -90,7 +90,7 @@ public class TenantServiceImpl implements TenantService {
                 .orElseThrow(() -> new EntityNotFoundException("Tenant does not exist"));
 
         if (tenant.getStatus() != TenantStatus.ACTIVE) {
-            throw new InvalidRequestException("Tenant is not pending");
+            throw new InvalidRequestException("Tenant must be active to be deactivated");
         }
 
         tenant.setStatus(TenantStatus.INACTIVE);
@@ -103,7 +103,7 @@ public class TenantServiceImpl implements TenantService {
                 .orElseThrow(() -> new EntityNotFoundException("Tenant does not exist"));
 
         if (tenant.getStatus() != TenantStatus.ACTIVE) {
-            throw new InvalidRequestException("Tenant is not pending");
+            throw new InvalidRequestException("Tenant must be active to be suspended");
         }
 
         tenant.setStatus(TenantStatus.SUSPENDED);
@@ -135,7 +135,7 @@ public class TenantServiceImpl implements TenantService {
                 .email(tenant.getAdminEmail())
                 .firstName(extractFirstName(tenant.getAdminFullName()))
                 .lastName(extractLastName(tenant.getAdminFullName()))
-                .password(this.passwordEncoder.encode(tenant.getAdminPassword()))
+                .password(tenant.getAdminPassword())
                 .role(UserRole.ROLE_COMPANY_ADMIN)
                 .tenant(tenant)
                 .enabled(true)

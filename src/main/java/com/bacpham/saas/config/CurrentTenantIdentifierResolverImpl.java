@@ -1,7 +1,6 @@
-package com.bacpham.saas.security;
+package com.bacpham.saas.config;
 
 
-import com.bacpham.saas.config.TenantContext;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.springframework.boot.hibernate.autoconfigure.HibernatePropertiesCustomizer;
