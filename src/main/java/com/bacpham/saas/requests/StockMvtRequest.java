@@ -27,4 +27,5 @@ public class StockMvtRequest {
     private String comment;
     @NotBlank(message = "Product ID should not be empty")
     private String productId;
+    private String partnerId;
 }

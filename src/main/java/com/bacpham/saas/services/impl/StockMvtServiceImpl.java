@@ -5,6 +5,7 @@ import com.bacpham.saas.entities.Product;
 import com.bacpham.saas.entities.StockMvt;
 import com.bacpham.saas.entities.TypeMvt;
 import com.bacpham.saas.mappers.StockMvtMapper;
+import com.bacpham.saas.repositories.PartnerRepository;
 import com.bacpham.saas.repositories.ProductRepository;
 import com.bacpham.saas.repositories.StockMvtRepository;
 import com.bacpham.saas.requests.StockMvtRequest;
@@ -28,6 +29,7 @@ public class StockMvtServiceImpl implements StockMvtService {
 
     private final StockMvtRepository stockMvtRepository;
     private final ProductRepository productRepository;
+    private final PartnerRepository partnerRepository;
     private final StockMvtMapper stockMvtMapper;
 
     @Override
@@ -37,6 +39,11 @@ public class StockMvtServiceImpl implements StockMvtService {
         
         final Product product = this.productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+
+        if (request.getPartnerId() != null) {
+            this.partnerRepository.findById(request.getPartnerId())
+                    .orElseThrow(() -> new EntityNotFoundException("Partner not found"));
+        }
 
         final StockMvt entity = this.stockMvtMapper.toEntity(request);
         if (entity.getDateMvt() == null) {
@@ -62,6 +69,11 @@ public class StockMvtServiceImpl implements StockMvtService {
     public void update(final String id, final StockMvtRequest request) {
         final StockMvt stockMvt = this.stockMvtRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("StockMvt does not exist"));
+
+        if (request.getPartnerId() != null) {
+            this.partnerRepository.findById(request.getPartnerId())
+                    .orElseThrow(() -> new EntityNotFoundException("Partner not found"));
+        }
 
         final StockMvt stockMvtToUpdate = this.stockMvtMapper.toEntity(request);
         stockMvtToUpdate.setId(id);

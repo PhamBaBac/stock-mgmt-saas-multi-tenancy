@@ -48,4 +48,8 @@ public class StockMvt extends AbstractEntity {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @ManyToOne
+    @JoinColumn(name = "partner_id")
+    private Partner partner;
+
 }

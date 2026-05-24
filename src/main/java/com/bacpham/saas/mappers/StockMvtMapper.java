@@ -1,5 +1,6 @@
 package com.bacpham.saas.mappers;
 
+import com.bacpham.saas.entities.Partner;
 import com.bacpham.saas.entities.Product;
 import com.bacpham.saas.entities.StockMvt;
 import com.bacpham.saas.requests.StockMvtRequest;
@@ -18,6 +19,7 @@ public class StockMvtMapper {
                 .product(Product.builder()
                         .id(request.getProductId())
                         .build())
+                .partner(request.getPartnerId() != null ? Partner.builder().id(request.getPartnerId()).build() : null)
                 .deleted(false)
                 .build();
     }
@@ -30,6 +32,8 @@ public class StockMvtMapper {
                 .typeMvt(entity.getTypeMvt())
                 .quantity(entity.getQuantity())
                 .productName(entity.getProduct() != null ? entity.getProduct().getName() : null)
+                .partnerId(entity.getPartner() != null ? entity.getPartner().getId() : null)
+                .partnerName(entity.getPartner() != null ? entity.getPartner().getName() : null)
                 .build();
     }
 }
