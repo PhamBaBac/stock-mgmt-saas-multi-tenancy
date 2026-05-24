@@ -21,6 +21,7 @@ public class StockMvtResponse {
     private Integer quantity;
     private LocalDate dateMvt;
     private String comment;
+    private String productId;
     private String productName;
     private String partnerId;
     private String partnerName;

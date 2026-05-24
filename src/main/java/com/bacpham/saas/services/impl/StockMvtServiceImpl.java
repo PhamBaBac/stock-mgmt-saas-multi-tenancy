@@ -70,17 +70,45 @@ public class StockMvtServiceImpl implements StockMvtService {
         final StockMvt stockMvt = this.stockMvtRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("StockMvt does not exist"));
 
+        // 1. Revert original stock movement from the old product
+        final Product oldProduct = stockMvt.getProduct();
+        if (oldProduct != null) {
+            int oldQty = oldProduct.getAvailableQuantity();
+            if (TypeMvt.IN.equals(stockMvt.getTypeMvt())) {
+                oldProduct.setAvailableQuantity(oldQty - stockMvt.getQuantity());
+            } else {
+                oldProduct.setAvailableQuantity(oldQty + stockMvt.getQuantity());
+            }
+            this.productRepository.save(oldProduct);
+        }
+
+        // 2. Fetch new product
+        final Product newProduct = this.productRepository.findById(request.getProductId())
+                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+
         if (request.getPartnerId() != null) {
             this.partnerRepository.findById(request.getPartnerId())
                     .orElseThrow(() -> new EntityNotFoundException("Partner not found"));
         }
 
-        final StockMvt stockMvtToUpdate = this.stockMvtMapper.toEntity(request);
-        stockMvtToUpdate.setId(id);
-        if (stockMvtToUpdate.getDateMvt() == null) {
-            stockMvtToUpdate.setDateMvt(LocalDate.now());
+        // 3. Update stock movement fields
+        stockMvt.setProduct(newProduct);
+        stockMvt.setTypeMvt(request.getTypeMvt());
+        stockMvt.setQuantity(request.getQuantity());
+        stockMvt.setDateMvt(request.getDateMvt() != null ? request.getDateMvt() : LocalDate.now());
+        stockMvt.setComment(request.getComment());
+        stockMvt.setPartner(request.getPartnerId() != null ? this.partnerRepository.findById(request.getPartnerId()).orElse(null) : null);
+
+        this.stockMvtRepository.save(stockMvt);
+
+        // 4. Apply new stock movement to the new product
+        int newQty = newProduct.getAvailableQuantity();
+        if (TypeMvt.IN.equals(request.getTypeMvt())) {
+            newProduct.setAvailableQuantity(newQty + request.getQuantity());
+        } else {
+            newProduct.setAvailableQuantity(newQty - request.getQuantity());
         }
-        this.stockMvtRepository.save(stockMvtToUpdate);
+        this.productRepository.save(newProduct);
     }
 
     @Override
@@ -103,6 +131,19 @@ public class StockMvtServiceImpl implements StockMvtService {
     public void delete(final String id) {
         final StockMvt stockMvt = this.stockMvtRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("StockMvt does not exist"));
+
+        // Revert stock quantity on delete
+        final Product product = stockMvt.getProduct();
+        if (product != null) {
+            int currentQty = product.getAvailableQuantity();
+            if (TypeMvt.IN.equals(stockMvt.getTypeMvt())) {
+                product.setAvailableQuantity(currentQty - stockMvt.getQuantity());
+            } else {
+                product.setAvailableQuantity(currentQty + stockMvt.getQuantity());
+            }
+            this.productRepository.save(product);
+        }
+
         this.stockMvtRepository.delete(stockMvt);
     }
 

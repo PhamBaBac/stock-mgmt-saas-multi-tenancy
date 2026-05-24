@@ -31,6 +31,7 @@ public class StockMvtMapper {
                 .comment(entity.getComment())
                 .typeMvt(entity.getTypeMvt())
                 .quantity(entity.getQuantity())
+                .productId(entity.getProduct() != null ? entity.getProduct().getId() : null)
                 .productName(entity.getProduct() != null ? entity.getProduct().getName() : null)
                 .partnerId(entity.getPartner() != null ? entity.getPartner().getId() : null)
                 .partnerName(entity.getPartner() != null ? entity.getPartner().getName() : null)
