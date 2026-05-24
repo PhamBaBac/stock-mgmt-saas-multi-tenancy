@@ -25,14 +25,14 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        format_sql: true
-        use_sql_comments: true
+        format_sql: false
+        use_sql_comments: false
         jdbc:
           batch_size: 20
         order_inserts: true
         order_updates: true
         multi_tenancy: SCHEMA # We will need it for later
-    show-sql: true
+    show-sql: false
     open-in-view: false
 
   # Flyway Configuration
@@ -61,3 +61,15 @@ springdoc:
     enabled: true
     operations-sorter: true
     tags-sorter: alpha
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
