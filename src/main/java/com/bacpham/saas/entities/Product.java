@@ -51,6 +51,10 @@ public class Product extends AbstractEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @Column(name = "active", nullable = false)
+    @lombok.Builder.Default
+    private boolean active = true;
+
     @OneToMany(mappedBy = "product")
     private List<StockMvt> stockMovements;
 

@@ -7,6 +7,7 @@ import com.bacpham.saas.exceptions.DuplicateResourceException;
 import com.bacpham.saas.mappers.ProductMapper;
 import com.bacpham.saas.repositories.CategoryRepository;
 import com.bacpham.saas.repositories.ProductRepository;
+import com.bacpham.saas.repositories.StockMvtRepository;
 import com.bacpham.saas.requests.ProductRequest;
 import com.bacpham.saas.responses.ProductResponse;
 import com.bacpham.saas.services.ProductService;
@@ -25,6 +26,7 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final StockMvtRepository stockMvtRepository;
     private final ProductMapper productMapper;
     @Override
     public void create(ProductRequest request) {
@@ -79,6 +81,11 @@ public class ProductServiceImpl implements ProductService {
     public void delete(String id) {
         final Product product = this.productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product does not exist"));
+
+        if (this.stockMvtRepository.existsByProductId(id)) {
+            throw new IllegalStateException("Không thể xóa sản phẩm này vì đã phát sinh lịch sử giao dịch kho. Vui lòng chuyển sang trạng thái Ngừng hoạt động (Inactive) thay vì xóa.");
+        }
+
         this.productRepository.delete(product);
     }
 

@@ -31,4 +31,5 @@ public class ProductRequest {
     private BigDecimal price;
     @NotBlank(message = "Category ID should not be empty")
     private String categoryId;
+    private Boolean active;
 }

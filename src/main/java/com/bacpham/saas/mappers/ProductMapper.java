@@ -19,6 +19,7 @@ public class ProductMapper {
                 .category(Category.builder()
                         .id(request.getCategoryId())
                         .build())
+                .active(request.getActive() != null ? request.getActive() : true)
                 .deleted(false)
                 .build();
     }
@@ -36,6 +37,7 @@ public class ProductMapper {
                 .categoryName(product.getCategory()
                         .getName())
                 .availableQuantity(product.getAvailableQuantity())
+                .active(product.isActive())
                 .build();
     }
 }
