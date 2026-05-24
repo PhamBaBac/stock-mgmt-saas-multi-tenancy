@@ -35,3 +35,5 @@ build/
 ### Secrets ###
 .env
 src/main/resources/certs/
+src/main/java/com/bacpham/saas/config/AdminInitializer.java
+
