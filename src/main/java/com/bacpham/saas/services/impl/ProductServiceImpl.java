@@ -55,11 +55,27 @@ public class ProductServiceImpl implements ProductService {
         }
 
         // check if category exists
-        checkIfCategoryExistById(request.getCategoryId());
+        final Category category = this.categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new EntityNotFoundException("Category does not exist"));
 
-        final Product productToUpdate = this.productMapper.toEntity(request);
-        productToUpdate.setId(id);
+        final Product productToUpdate = productExists.get();
+        productToUpdate.setName(request.getName());
+        productToUpdate.setReference(request.getReference());
+        productToUpdate.setDescription(request.getDescription());
+        productToUpdate.setPrice(request.getPrice());
+        productToUpdate.setAlertThreshold(request.getAlertThreshold());
+        productToUpdate.setCategory(category);
+        productToUpdate.setActive(request.getActive() != null ? request.getActive() : true);
+
         this.productRepository.save(productToUpdate);
+    }
+
+    @Override
+    public void updateStatus(String id, boolean active) {
+        final Product product = this.productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product does not exist"));
+        product.setActive(active);
+        this.productRepository.save(product);
     }
 
     @Override
