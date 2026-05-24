@@ -98,6 +98,20 @@ public class GlobalExceptionHandler {
                                 .body(errorResponse);
         }
 
+        @ExceptionHandler(value = org.springframework.security.authentication.DisabledException.class)
+        public ResponseEntity<ErrorResponse> handleDisabledException(
+                        final org.springframework.security.authentication.DisabledException ex,
+                        final HttpServletRequest request) {
+
+                final ErrorResponse errorResponse = ErrorResponse.builder()
+                                .message("Your account has been disabled. Please contact the administrator.")
+                                .path(request.getRequestURI())
+                                .build();
+
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                .body(errorResponse);
+        }
+
         @ExceptionHandler(value = InternalAuthenticationServiceException.class)
         public ResponseEntity<ErrorResponse> handleException(
                         final InternalAuthenticationServiceException ex,
