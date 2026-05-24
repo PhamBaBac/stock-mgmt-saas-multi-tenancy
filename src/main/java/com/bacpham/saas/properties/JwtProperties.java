@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "app.jwt")
 public class JwtProperties {
 
-    private String privateKeyPath;
-    private String publicKeyPath;
+    private String privateKey;
+    private String publicKey;
     private long accessTokenExpiration;
 }
