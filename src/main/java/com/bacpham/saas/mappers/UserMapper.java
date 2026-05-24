@@ -17,6 +17,7 @@ public class UserMapper {
                 .role(request.getRole())
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
+                .enabled(request.getEnabled() != null ? request.getEnabled() : true)
                 .build();
     }
 

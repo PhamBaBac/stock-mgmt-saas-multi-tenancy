@@ -31,4 +31,6 @@ public class UserRequest {
     private String lastName;
     @NotNull(message = "Role should not be empty")
     private UserRole role;
+    @NotNull(message = "Status should not be empty")
+    private Boolean enabled;
 }

@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
         final User user = this.userMapper.toEntity(request);
         user.setPassword(this.passwordEncoder.encode(request.getPassword()));
         user.setTenant(Tenant.builder().id(tenantId).build());
-        user.setEnabled(true);
+        user.setEnabled(request.getEnabled() != null ? request.getEnabled() : true);
 
         this.repository.save(user);
 
@@ -97,6 +97,9 @@ public class UserServiceImpl implements UserService {
         user.setRole(request.getRole());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
+        if (request.getEnabled() != null) {
+            user.setEnabled(request.getEnabled());
+        }
         this.repository.save(user);
         log.info("User updated successfully");
     }
