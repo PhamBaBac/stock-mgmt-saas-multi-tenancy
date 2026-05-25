@@ -31,6 +31,7 @@ public class TenantServiceImpl implements TenantService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final ProvisioningService provisioningService;
+    private final org.springframework.context.ApplicationEventPublisher eventPublisher;
 
     @Override
     public void registerTenant(RegisterTenantRequest request) {
@@ -49,6 +50,12 @@ public class TenantServiceImpl implements TenantService {
         tenant.setStatus(TenantStatus.PENDING);
 
         this.tenantRepository.save(tenant);
+
+        // Publish registration event
+        this.eventPublisher.publishEvent(new com.bacpham.saas.events.TenantRegisteredEvent(
+                this, tenant.getCompanyName(), tenant.getCompanyCode(), tenant.getAdminEmail()
+        ));
+        log.info("Published TenantRegisteredEvent for tenant: {}", tenant.getCompanyName());
     }
 
     @Override

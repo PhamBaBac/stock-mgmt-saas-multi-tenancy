@@ -54,6 +54,9 @@ app:
     private-key: ${JWT_PRIVATE_KEY:}
     public-key: ${JWT_PUBLIC_KEY:}
     access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:86400000}
+  telegram:
+    bot-token: ${TELEGRAM_BOT_TOKEN:}
+    chat-id: ${TELEGRAM_CHAT_ID:}
 
 springdoc:
   default-produces-media-type: application/json
