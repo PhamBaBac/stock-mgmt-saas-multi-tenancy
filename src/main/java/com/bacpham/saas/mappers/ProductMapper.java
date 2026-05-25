@@ -32,10 +32,8 @@ public class ProductMapper {
                 .description(product.getDescription())
                 .price(product.getPrice())
                 .alertThreshold(product.getAlertThreshold())
-                .categoryId(product.getCategory()
-                        .getId())
-                .categoryName(product.getCategory()
-                        .getName())
+                .categoryId(product.getCategory() != null ? product.getCategory().getId() : null)
+                .categoryName(product.getCategory() != null ? product.getCategory().getName() : null)
                 .availableQuantity(product.getAvailableQuantity())
                 .active(product.isActive())
                 .build();
